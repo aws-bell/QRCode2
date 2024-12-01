@@ -1,4 +1,4 @@
-export type Task = {
+export type QRCode = {
     id: number
     title: string
     text: string
