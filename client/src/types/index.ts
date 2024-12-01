@@ -1,6 +1,9 @@
 export type Task = {
     id: number
     title: string
+    text: string
+    image: Uint8Array
+    isFavorite: boolean
     created_at: Date
     updated_at: Date
 }
