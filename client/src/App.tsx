@@ -1,9 +1,12 @@
 import { useEffect } from 'react';
 import { BrowserRouter, Route, Routes } from 'react-router-dom'
 import { Auth } from './components/Auth'
-import { Todo } from './components/Todo'
 import axios from 'axios'
 import { CsrfToken } from './types'
+import CreateQR from './components/CreateQR';
+import QRList from './components/QRList';
+import FavoriteQRList from './components/FavoriteQRList';
+import EditQR from './components/EditQR';
 
 function App() {
   useEffect(() => {
@@ -20,7 +23,10 @@ function App() {
     <BrowserRouter>
       <Routes>
         <Route path="/" element={<Auth />} />
-        <Route path="/todo" element={<Todo />} />
+        <Route path="/createQR" element={<CreateQR />} />
+        <Route path="/QRList" element={<QRList />} />
+        <Route path="/favoriteQRList" element={<FavoriteQRList />} />
+        <Route path="/editQR" element={<EditQR />} />
       </Routes>
     </BrowserRouter>
   );
