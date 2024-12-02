@@ -6,6 +6,7 @@ import (
 
 	"github.com/golang-jwt/jwt/v4"
 	"github.com/labstack/echo/v4"
+	"github.com/matthewyuh246/qrcode_go/model"
 	"github.com/matthewyuh246/qrcode_go/usecase"
 )
 
@@ -13,6 +14,7 @@ type IQRCodeController interface {
 	GenerateQRCode(c echo.Context) error
 	GetRecentQRCodes(c echo.Context) error
 	GetFavoriteQRCodes(c echo.Context) error
+	ChangeQRCode(c echo.Context) error
 }
 
 type qrcodeController struct {
@@ -87,4 +89,48 @@ func (qc *qrcodeController) GetFavoriteQRCodes(c echo.Context) error {
 	}
 
 	return c.JSON(http.StatusOK, qrCodes)
+}
+
+func (qc *qrcodeController) ChangeQRCode(c echo.Context) error {
+	user := c.Get("user").(*jwt.Token)
+	claims := user.Claims.(jwt.MapClaims)
+	userId := claims["user_id"].(float64)
+
+	qrCodeFile, err := c.FormFile("qrcode")
+	if err != nil {
+		return c.JSON(http.StatusBadRequest, echo.Map{"error": "Could not get QR code image"})
+	}
+
+	embedImageFile, err := c.FormFile("embed_image")
+	if err != nil {
+		return c.JSON(http.StatusBadRequest, echo.Map{"error": "Could not get embedded image"})
+	}
+
+	colorCode := c.FormValue("color")
+	if colorCode == "" {
+		colorCode = "#000000"
+	}
+
+	title := c.FormValue("title")
+
+	req := &model.RequestQRCode{
+		QRCodeFile:     qrCodeFile,
+		EmbedImageFile: embedImageFile,
+		Color:          colorCode,
+		Title:          title,
+	}
+
+	ChangedImage, err := qc.qu.ChangeQRCode(req)
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, echo.Map{"error": "Image processing failed"})
+	}
+
+	ChangedImage.UserId = uint(userId)
+
+	err = qc.qu.SaveQRCode(ChangedImage)
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, echo.Map{"error": "Failed to save QR code"})
+	}
+
+	return c.Blob(http.StatusOK, "image/png", ChangedImage.Image)
 }
