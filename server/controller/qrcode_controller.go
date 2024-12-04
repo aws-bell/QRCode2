@@ -14,7 +14,7 @@ type IQRCodeController interface {
 	GenerateQRCode(c echo.Context) error
 	GetRecentQRCodes(c echo.Context) error
 	GetFavoriteQRCodes(c echo.Context) error
-	ChangeQRCode(c echo.Context) error
+	EditQRCode(c echo.Context) error
 }
 
 type qrcodeController struct {
@@ -91,7 +91,7 @@ func (qc *qrcodeController) GetFavoriteQRCodes(c echo.Context) error {
 	return c.JSON(http.StatusOK, qrCodes)
 }
 
-func (qc *qrcodeController) ChangeQRCode(c echo.Context) error {
+func (qc *qrcodeController) EditQRCode(c echo.Context) error {
 	user := c.Get("user").(*jwt.Token)
 	claims := user.Claims.(jwt.MapClaims)
 	userId := claims["user_id"].(float64)
@@ -113,11 +113,22 @@ func (qc *qrcodeController) ChangeQRCode(c echo.Context) error {
 
 	title := c.FormValue("title")
 
+	isFavoriteStr := c.FormValue("is_favorite")
+	isFavorite := false
+	if isFavoriteStr != "" {
+		val, err := strconv.ParseBool(isFavoriteStr)
+		if err != nil {
+			return c.JSON(http.StatusBadRequest, echo.Map{"error": "Invalid value for is_favorite"})
+		}
+		isFavorite = val
+	}
+
 	req := &model.RequestQRCode{
 		QRCodeFile:     qrCodeFile,
 		EmbedImageFile: embedImageFile,
 		Color:          colorCode,
 		Title:          title,
+		IsFavorite:     isFavorite,
 	}
 
 	ChangedImage, err := qc.qu.ChangeQRCode(req)

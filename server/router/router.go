@@ -38,7 +38,7 @@ func NewRouter(uc controller.IUserController, qc controller.IQRCodeController) *
 	t.POST("/generate", qc.GenerateQRCode)
 	t.GET("/recent", qc.GetRecentQRCodes)
 	t.GET("/favorite", qc.GetFavoriteQRCodes)
-	t.POST("/change", qc.ChangeQRCode)
+	t.POST("/edit", qc.EditQRCode)
 
 	return e
 }
