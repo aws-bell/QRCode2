@@ -22,6 +22,7 @@ type RequestQRCode struct {
 	EmbedImageFile *multipart.FileHeader `json:"embed_image_file"`
 	Color          string                `json:"color"`
 	Title          string                `json:"title"`
+	IsFavorite     bool                  `json:"is_favorite" gorm:"default:false"`
 }
 
 type QRCodeResponse struct {
