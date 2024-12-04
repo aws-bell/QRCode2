@@ -1,6 +1,6 @@
 import axios from 'axios'
 import { useQueryClient, useMutation } from '@tanstack/react-query'
-import { Task } from '../types'
+import { QRCode } from '../types'
 import useStore from '../store'
 import { useError } from '../hooks/useError'
 
@@ -10,11 +10,11 @@ export const useMutateTask = () => {
     const resetEditedTask = useStore((state) => state.resetEditedTask)
 
     const createTaskMutation = useMutation(
-        (task: Omit<Task, 'id' | 'created_at' | 'updated_at'>) =>
-            axios.post<Task>(`${process.env.REACT_APP_API_URL}/tasks`, task),
+        (task: Omit<QRCode, 'id' | 'created_at' | 'updated_at'>) =>
+            axios.post<QRCode>(`${process.env.REACT_APP_API_URL}/tasks`, task),
         {
             onSuccess: (res) => {
-                const previousTasks = queryClient.getQueryData<Task[]>(['tasks'])
+                const previousTasks = queryClient.getQueryData<QRCode[]>(['tasks'])
                 if (previousTasks) {
                     queryClient.setQueryData(['tasks'], [...previousTasks, res.data])
                 }
@@ -30,15 +30,15 @@ export const useMutateTask = () => {
         }
     )
     const updateTaskMutation = useMutation(
-        (task: Omit<Task, 'created_at' | 'updated_at'>) => 
-            axios.put<Task>(`${process.env.REACT_APP_API_URL}/tasks/${task.id}`, {
+        (task: Omit<QRCode, 'created_at' | 'updated_at'>) => 
+            axios.put<QRCode>(`${process.env.REACT_APP_API_URL}/tasks/${task.id}`, {
                 title: task.title,
             }),
         {
             onSuccess: (res, variables) => {
-                const previousTasks = queryClient.getQueryData<Task[]>(['tasks'])
+                const previousTasks = queryClient.getQueryData<QRCode[]>(['tasks'])
                 if (previousTasks) {
-                    queryClient.setQueryData<Task[]>(
+                    queryClient.setQueryData<QRCode[]>(
                         ['tasks'],
                         previousTasks.map((task) =>
                             task.id === variables.id ? res.data : task
@@ -61,9 +61,9 @@ export const useMutateTask = () => {
             axios.delete(`${process.env.REACT_APP_API_URL}/tasks/${id}`),
         {
             onSuccess: (_, variables) => {
-                const previousTasks = queryClient.getQueryData<Task[]>(['tasks'])
+                const previousTasks = queryClient.getQueryData<QRCode[]>(['tasks'])
                 if (previousTasks) {
-                    queryClient.setQueryData<Task[]>(
+                    queryClient.setQueryData<QRCode[]>(
                         ['tasks'],
                         previousTasks.filter((task) => task.id !== variables)
                     )
