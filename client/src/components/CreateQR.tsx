@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import Header  from "./Header";
 
 const CreateQR: React.FC = () => {
   const [title, setTitle] = useState("");
@@ -7,22 +8,7 @@ const CreateQR: React.FC = () => {
 
   return (
     <div className="min-h-screen bg-gray-200">
-      {/* Header */}
-      <header className="bg-blue-200 py-4 px-8 flex justify-between items-center">
-        <h1 className="text-lg font-bold">QRコード生成アプリ</h1>
-        <nav className="flex space-x-4">
-          <a href="favoriteQRList" className="text-sm text-gray-700 hover:underline">
-            お気に入り
-          </a>
-          <a href="QRList" className="text-sm text-gray-700 hover:underline">
-            履歴
-          </a>
-          <a href="/" className="text-sm text-gray-700 hover:underline">
-            ログアウト
-          </a>
-        </nav>
-      </header>
-
+        <Header/>
       {/* Main Content */}
       <main className="flex justify-center items-center py-12">
         <div className="bg-white shadow-md p-6 rounded-md flex space-x-8">
