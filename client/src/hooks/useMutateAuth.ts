@@ -14,7 +14,7 @@ export const useMutateAuth = () => {
             await axios.post(`${process.env.REACT_APP_API_URL}/login`, user),
         {
             onSuccess: () => {
-                navigate('/todo')
+                navigate('/createQR')
             },
             onError: (err: any) => {
                 if (err.response.data.message) {
