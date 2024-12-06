@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
+import Header from './Header';
 
 const App: React.FC = () => {
   const [qrCodeFile, setQrCodeFile] = useState<File | null>(null);
@@ -56,6 +57,8 @@ const App: React.FC = () => {
   };
 
   return (
+    <div>
+        <Header />
     <div className="max-w-md mx-auto p-4">
       <h1 className="text-2xl font-bold mb-4">QRコードの加工と保存</h1>
       <div className="mb-4">
@@ -109,6 +112,7 @@ const App: React.FC = () => {
       >
         送信
       </button>
+    </div>
     </div>
   );
 };
