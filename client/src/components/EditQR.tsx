@@ -9,7 +9,7 @@ const App: React.FC = () => {
   const [qrCodeFile, setQrCodeFile] = useState<File | null>(null);
   const [embedImageFile, setEmbedImageFile] = useState<File | null>(null);
   const [colorCode, setColorCode] = useState('#000000');
-  const [title, setTitle] = useState('');
+  const [title, setTitle] = useState(editTitle);
   const [isFavorite, setIsFavorite] = useState(false);
 
   const navigate = useNavigate();

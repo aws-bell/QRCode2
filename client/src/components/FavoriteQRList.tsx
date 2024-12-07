@@ -14,7 +14,6 @@ const FavoriteQRList = () => {
         setEditTitle(title);
         setEditImage(receptimg);
         navigate("/editQR");
-        console.log(title);
     }
     return(
         <>
