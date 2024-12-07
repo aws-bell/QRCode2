@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from 'react'
 import Header from './Header'
 import axios from 'axios';
+import { QRCode } from '../types';
 
 const FavoriteQRList = () => {
-    const [favoriteQRList, setFavoriteQRList] = useState([]);
+    const [favoriteQRList, setFavoriteQRList] = useState<QRCode[]>([]);
 
     useEffect(() => {
         const fetchQRList = async() => {
@@ -17,6 +18,7 @@ const FavoriteQRList = () => {
         }
         fetchQRList();
     },[]);
+    
     return(
         <>
         <Header/>
