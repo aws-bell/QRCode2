@@ -1,7 +1,22 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import Header from './Header'
+import axios from 'axios';
 
 const QRList = () => {
+    const [QRList, setQRList] = useState([]);
+
+    useEffect(() => {
+        const fetchQRList = async() => {
+            try{
+                const response = await axios.get(`${process.env.REACT_APP_API_URL}/qrcode/recent`);
+                setQRList(response.data);
+                console.log(QRList);
+            }catch(err){
+                console.log(err)
+            }
+        }
+        fetchQRList();
+    },[]);
     return(
         <>
         <Header/>

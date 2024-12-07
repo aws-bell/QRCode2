@@ -1,7 +1,22 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import Header from './Header'
+import axios from 'axios';
 
 const FavoriteQRList = () => {
+    const [favoriteQRList, setFavoriteQRList] = useState([]);
+
+    useEffect(() => {
+        const fetchQRList = async() => {
+            try{
+                const response = await axios.get(`${process.env.REACT_APP_API_URL}/qrcode/favorite`);
+                setFavoriteQRList(response.data);
+                console.log(favoriteQRList);
+            }catch(err){
+                console.log(err)
+            }
+        }
+        fetchQRList();
+    },[]);
     return(
         <>
         <Header/>
