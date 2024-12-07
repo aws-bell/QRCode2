@@ -5,30 +5,34 @@ import { useNavigate } from "react-router-dom";
 
 const CreateQR: React.FC = () => {
   const navigate = useNavigate();
-  const [Title, setTitle] = useState("");
-  const [Text, setText] = useState("");
-  const [isFavorite, setFavorite] = useState(false);
+  const [text, setText] = useState('');
+  const [title, setTitle] = useState('');
+  const [isFavorite, setIsFavorite] = useState(false);
   const handleSubmit = async () => {
 
-    const formData = new FormData();
-    formData.append('Text', Text);
-    formData.append('Title', Title);
-    formData.append('is_Favorite', String(isFavorite));
+    const requestBody = {
+      text: text,
+      is_favorite: isFavorite,
+      title: title
+    };
 
     try {
-      const response = await axios.post(`${process.env.REACT_APP_API_URL}/qrcode/generate`, formData, {
+      const response = await axios.post(`${process.env.REACT_APP_API_URL}/qrcode/generate`, requestBody, {
+        headers: {
+          'Content-Type': 'application/json'
+        },
         responseType: 'blob'
       });
+
+      // response.dataはblob(画像)として返される
       const blob = response.data;
       const imgURL = URL.createObjectURL(blob);
-
-      // 送信後にResultPageへ移動し、stateでimgURLを渡す
-      navigate('/CreateQRResult', { state: { imageURL: imgURL } });
-    } catch (error) {
-      console.error(error);
-      alert('画像の処理に失敗しました。');
+      navigate('/createQRresult', { state: { imageURL: imgURL } });
+      // <img src={imgURL} />で表示可能
+    } catch (error: any) {
+      console.error('Error:', error.response ? error.response.data : error.message);
     }
-  };
+  }
 
   return (
     <div className="min-h-screen bg-gray-200">
@@ -42,7 +46,7 @@ const CreateQR: React.FC = () => {
               <label className="block Text-sm font-medium mb-1">タイトル</label>
               <input
                 type="Text"
-                value={Title}
+                value={title}
                 onChange={(e) => setTitle(e.target.value)}
                 className="w-full border border-gray-300 rounded-md px-3 py-2 bg-blue-100"
               />
@@ -51,7 +55,7 @@ const CreateQR: React.FC = () => {
               <label className="block Text-sm font-medium mb-1">テキスト</label>
               <input
                 type="Text"
-                value={Text}
+                value={text}
                 onChange={(e) => setText(e.target.value)}
                 className="w-full border border-gray-300 rounded-md px-3 py-2 bg-blue-100"
               />
@@ -61,7 +65,7 @@ const CreateQR: React.FC = () => {
               <input
                 type="checkbox"
                 checked={isFavorite}
-                onChange={(e) => setFavorite(e.target.checked)}
+                onChange={(e) => setIsFavorite(e.target.checked)}
                 className="h-5 w-5"
               />
             </div>

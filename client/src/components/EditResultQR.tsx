@@ -10,7 +10,7 @@ const ResultPage: React.FC = () => {
   const { imageURL }: { imageURL?: string } = location.state || {};
 
   const handleBack = () => {
-    navigate('/');
+    navigate('/editQR');
   };
 
   return (

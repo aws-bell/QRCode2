@@ -8,6 +8,8 @@ import QRList from './components/QRList';
 import FavoriteQRList from './components/FavoriteQRList';
 import EditQR from './components/EditQR';
 import EditResultQR from './components/EditResultQR'
+import CreateQRResult from './components/CreateQRResult';
+import GifQR from './components/GifQR';
 
 function App() {
   useEffect(() => {
@@ -25,10 +27,12 @@ function App() {
       <Routes>
         <Route path="/" element={<Auth />} />
         <Route path="/createQR" element={<CreateQR />} />
+        <Route path="/createQRresult" element={<CreateQRResult />} />
         <Route path="/QRList" element={<QRList />} />
         <Route path="/favoriteQRList" element={<FavoriteQRList />} />
         <Route path="/editQR" element={<EditQR />} />
-        <Route path="editresultQR" element={<EditResultQR />} />
+        <Route path="/editresultQR" element={<EditResultQR />} />
+        <Route path="/gifQR" element={<GifQR />} />
       </Routes>
     </BrowserRouter>
   );
