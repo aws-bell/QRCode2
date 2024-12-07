@@ -1,24 +1,9 @@
-import React, { useEffect, useState } from 'react'
+import React from 'react'
 import Header from './Header'
-import axios from 'axios';
-import { QRCode } from '../types';
+import { useQueryTasks } from '../hooks/useQueryTasks';
 
 const FavoriteQRList = () => {
-    const [favoriteQRList, setFavoriteQRList] = useState<QRCode[]>([]);
-
-    useEffect(() => {
-        const fetchQRList = async() => {
-            try{
-                const response = await axios.get(`${process.env.REACT_APP_API_URL}/qrcode/favorite`);
-                setFavoriteQRList(response.data);
-                console.log(favoriteQRList);
-            }catch(err){
-                console.log(err)
-            }
-        }
-        fetchQRList();
-    },[]);
-    
+    const {data} = useQueryTasks();
     return(
         <>
         <Header/>
@@ -34,18 +19,23 @@ const FavoriteQRList = () => {
                                 <th className='px-10 py-4'>タイトル</th>
                                 <th className='px-10 py-4'>テキスト</th>
                             </tr>
-                            <tr className='text-xl  border-b-2 m-10'>
-                                <td><img src='https://www.illust-box.jp/db_img/sozai/00008/88925/watermark.jpg' alt='QRこーど' height="50px" width="50px"></img></td>
-                                <td>テスト１</td>
-                                <td>あああああ</td>
-                                <td>編集</td>
-                            </tr>
-                            <tr className='text-xl  border-b-2 m-10'>
-                                <td><img src='https://www.illust-box.jp/db_img/sozai/00008/88925/watermark.jpg' alt='QRこーど' height="50px" width="50px"></img></td>
-                                <td>テスト2</td>
-                                <td>いいい</td>
-                                <td>編集</td>
-                            </tr>
+                            {data?.map((info, index) => {
+                                return(
+                                    <>
+                                    {info.isFavorite ? 
+                                <div>
+                                    <tr key={index} className='text-xl  border-b-2 m-10'>
+                                        <td><img src={`data:image/png;base64,${info.image}`} alt='QRこーど' height="50px" width="50px"></img></td>
+                                        <td>{info.title}</td>
+                                        <td>{info.text}</td>
+                                        <td>{info.isFavorite}</td>
+                                        <td><a href='/editQR'>編集</a></td>
+                                    </tr> 
+                                </div>: 
+                                <div></div>}
+                                </>         
+                                )    
+                                })}
                         </tbody>
                     </table>
                 </div>
