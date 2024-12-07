@@ -2,8 +2,10 @@ import React, { useState } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import Header from './Header';
+import { useAppContext } from '../context/AppContext';
 
 const App: React.FC = () => {
+  const {editTitle} = useAppContext();
   const [qrCodeFile, setQrCodeFile] = useState<File | null>(null);
   const [embedImageFile, setEmbedImageFile] = useState<File | null>(null);
   const [colorCode, setColorCode] = useState('#000000');
@@ -93,6 +95,7 @@ const App: React.FC = () => {
         <input 
           type="text" 
           value={title} 
+          placeholder={editTitle}
           onChange={(e) => setTitle(e.target.value)} 
           className="block w-full border border-gray-300 p-2"
         />

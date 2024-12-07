@@ -1,9 +1,21 @@
 import React from 'react'
 import Header from './Header'
 import { useQueryTasks } from '../hooks/useQueryTasks';
+import { useAppContext } from '../context/AppContext';
+import { useNavigate } from 'react-router-dom';
 
 const FavoriteQRList = () => {
     const {data} = useQueryTasks();
+    const {setEditTitle, setEditImage} = useAppContext();
+    const navigate = useNavigate();
+    const shiftToEdit = (title: string, img : Uint8Array)=> {
+        const blob = new Blob([img], {type: "image/png"});
+        const receptimg = new File([blob], "image/png", {type: "image/png"});
+        setEditTitle(title);
+        setEditImage(receptimg);
+        navigate("/editQR");
+        console.log(title);
+    }
     return(
         <>
         <Header/>
@@ -29,7 +41,7 @@ const FavoriteQRList = () => {
                                         <td>{info.title}</td>
                                         <td>{info.text}</td>
                                         <td>{info.isFavorite}</td>
-                                        <td><a href='/editQR'>編集</a></td>
+                                        <td><button onClick={() => shiftToEdit(info.title, info.image)}>編集</button></td>
                                     </tr> 
                                 </div>: 
                                 <div></div>}
