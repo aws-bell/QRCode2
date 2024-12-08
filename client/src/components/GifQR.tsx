@@ -2,11 +2,14 @@ import React, { useState } from 'react';
 import axios from 'axios';
 import DownloadButtonGif from './DownloadButtonGIf';
 import Header from './Header';
+import { Audio } from 'react-loader-spinner'
+
 
 const GifQR: React.FC = () => {
   const [text, setText] = useState('');
   const [gifImage, setGifImage] = useState<File | null>(null);
   const [qrResult, setQrResult] = useState<string | null>(null);
+  const [loading, setLoading] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -19,6 +22,7 @@ const GifQR: React.FC = () => {
     formData.append('text', text);
     formData.append('gif_image', gifImage);
 
+    setLoading(true);
     try {
       const response = await axios.post(
         'http://localhost:8000/generate',
@@ -32,6 +36,8 @@ const GifQR: React.FC = () => {
     } catch (err) {
       console.error(err);
       alert("Error generating QR");
+    }finally{
+      setLoading(false)
     }
   }
 
@@ -74,6 +80,24 @@ const GifQR: React.FC = () => {
         </div>
       )}
     </div>
+ 
+    {loading &&    
+    <div className="fixed top-0 left-0 w-full h-full bg-black bg-opacity-50 flex justify-center items-center z-50">
+      <div  className='bg-white rounded-full flex'>
+        <div className='m-10'> 
+        <Audio
+          height="80"
+          width="80"
+          color="blue"
+          ariaLabel="loading"
+        />
+        </div>
+        <div className='m-10 text-2xl font-bold  flex text-center items-center'>
+          gifQRコードの生成中です。
+        </div>
+      </div>
+    </div>
+    }
     </div>
   );
 }
