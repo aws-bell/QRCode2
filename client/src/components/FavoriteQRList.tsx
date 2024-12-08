@@ -1,24 +1,20 @@
-import React, { useEffect, useState } from 'react'
+import React from 'react'
 import Header from './Header'
-import axios from 'axios';
-import { QRCode } from '../types';
+import { useQueryTasks } from '../hooks/useQueryTasks';
+import { useAppContext } from '../context/AppContext';
+import { useNavigate } from 'react-router-dom';
 
 const FavoriteQRList = () => {
-    const [favoriteQRList, setFavoriteQRList] = useState<QRCode[]>([]);
-
-    useEffect(() => {
-        const fetchQRList = async() => {
-            try{
-                const response = await axios.get(`${process.env.REACT_APP_API_URL}/qrcode/favorite`);
-                setFavoriteQRList(response.data);
-                console.log(favoriteQRList);
-            }catch(err){
-                console.log(err)
-            }
-        }
-        fetchQRList();
-    },[]);
-    
+    const {data} = useQueryTasks();
+    const {setEditTitle, setEditImage} = useAppContext();
+    const navigate = useNavigate();
+    const shiftToEdit = (title: string, img : Uint8Array)=> {
+        const blob = new Blob([img], {type: "image/png"});
+        const receptimg = new File([blob], "image/png", {type: "image/png"});
+        setEditTitle(title);
+        setEditImage(receptimg);
+        navigate("/editQR");
+    }
     return(
         <>
         <Header/>
@@ -34,18 +30,23 @@ const FavoriteQRList = () => {
                                 <th className='px-10 py-4'>タイトル</th>
                                 <th className='px-10 py-4'>テキスト</th>
                             </tr>
-                            <tr className='text-xl  border-b-2 m-10'>
-                                <td><img src='https://www.illust-box.jp/db_img/sozai/00008/88925/watermark.jpg' alt='QRこーど' height="50px" width="50px"></img></td>
-                                <td>テスト１</td>
-                                <td>あああああ</td>
-                                <td>編集</td>
-                            </tr>
-                            <tr className='text-xl  border-b-2 m-10'>
-                                <td><img src='https://www.illust-box.jp/db_img/sozai/00008/88925/watermark.jpg' alt='QRこーど' height="50px" width="50px"></img></td>
-                                <td>テスト2</td>
-                                <td>いいい</td>
-                                <td>編集</td>
-                            </tr>
+                            {data?.map((info, index) => {
+                                return(
+                                    <>
+                                    {info.isFavorite ? 
+                                <div>
+                                    <tr key={index} className='text-xl  border-b-2 m-10'>
+                                        <td><img src={`data:image/png;base64,${info.image}`} alt='QRこーど' height="50px" width="50px"></img></td>
+                                        <td>{info.title}</td>
+                                        <td>{info.text}</td>
+                                        <td>{info.isFavorite}</td>
+                                        <td><button onClick={() => shiftToEdit(info.title, info.image)}>編集</button></td>
+                                    </tr> 
+                                </div>: 
+                                <div></div>}
+                                </>         
+                                )    
+                                })}
                         </tbody>
                     </table>
                 </div>
