@@ -3,6 +3,7 @@ import Header from './Header'
 import { useQueryTasks } from '../hooks/useQueryTasks';
 import { useAppContext } from '../context/AppContext';
 import { useNavigate } from 'react-router-dom';
+import DownloadButton from './DownloadButton';
 
 const QRList = () => {
     const {data} = useQueryTasks();
@@ -15,6 +16,7 @@ const QRList = () => {
         setEditImage(receptimg);
         navigate("/editQR");
     }
+    console.log(data)
 
     return(
         <>
@@ -37,8 +39,9 @@ const QRList = () => {
                                     <td><img src={`data:image/png;base64,${info.image}`} alt='QRこーど' height="50px" width="50px"></img></td>
                                     <td>{info.title}</td>
                                     <td>{info.text}</td>
-                                    <td>{info.isFavorite? <p>★</p> : <p>☆</p>}</td>
-                                    <td><button onClick={() => shiftToEdit(info.title, info.image)}>編集</button></td>
+                                    <td>{info.isFavorite ? <p>★</p> : <p>☆</p>}</td>
+                                    <td><button style={{width: '100px', backgroundColor: 'lightyellow',borderRadius: '10px', margin: "10px", padding:"10px"}} onClick={() => shiftToEdit(info.title, info.image)}>編集</button></td>
+                                    <td><DownloadButton imageURL={`data:image/png;base64,${info.image}`}/></td>
                                 </tr>                
                             ))}
                         </tbody>

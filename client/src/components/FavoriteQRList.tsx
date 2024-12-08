@@ -3,6 +3,7 @@ import Header from './Header'
 import { useQueryTasks } from '../hooks/useQueryTasks';
 import { useAppContext } from '../context/AppContext';
 import { useNavigate } from 'react-router-dom';
+import DownloadButton from './DownloadButton';
 
 const FavoriteQRList = () => {
     const {data} = useQueryTasks();
@@ -15,6 +16,7 @@ const FavoriteQRList = () => {
         setEditImage(receptimg);
         navigate("/editQR");
     }
+    console.log(data)
     return(
         <>
         <Header/>
@@ -30,23 +32,15 @@ const FavoriteQRList = () => {
                                 <th className='px-10 py-4'>タイトル</th>
                                 <th className='px-10 py-4'>テキスト</th>
                             </tr>
-                            {data?.map((info, index) => {
-                                return(
-                                    <>
-                                    {info.isFavorite ? 
-                                <div>
-                                    <tr key={index} className='text-xl  border-b-2 m-10'>
-                                        <td><img src={`data:image/png;base64,${info.image}`} alt='QRこーど' height="50px" width="50px"></img></td>
-                                        <td>{info.title}</td>
-                                        <td>{info.text}</td>
-                                        <td>{info.isFavorite}</td>
-                                        <td><button onClick={() => shiftToEdit(info.title, info.image)}>編集</button></td>
-                                    </tr> 
-                                </div>: 
-                                <div></div>}
-                                </>         
-                                )    
-                                })}
+                            {data?.map((info, index) => (
+                                <tr key={index} className='text-xl  border-b-2 m-10'>
+                                    <td><img src={`data:image/png;base64,${info.image}`} alt='QRこーど' height="50px" width="50px"></img></td>
+                                    <td>{info.title}</td>
+                                    <td>{info.text}</td>
+                                    <td><button style={{width: '100px', backgroundColor: 'lightyellow',borderRadius: '10px', margin: "10px", padding:"10px"}} onClick={() => shiftToEdit(info.title, info.image)}>編集</button></td>
+                                    <td><DownloadButton imageURL={`data:image/png;base64,${info.image}`}/></td>
+                                </tr>                
+                            ))}
                         </tbody>
                     </table>
                 </div>
